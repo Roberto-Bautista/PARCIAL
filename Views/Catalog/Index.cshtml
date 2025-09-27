@@ -1,0 +1,43 @@
+@model IEnumerable<PortalInmobiliario.Models.Inmueble>
+
+<h2>Catálogo de Inmuebles</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Título</th>
+                <th>Ciudad</th>
+                <th>Tipo</th>
+                <th>Dormitorios</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var inmueble in Model)
+        {
+            <tr>
+                <td>@inmueble.Codigo</td>
+                <td>@inmueble.Titulo</td>
+                <td>@inmueble.Ciudad</td>
+                <td>@inmueble.Tipo</td>
+                <td>@inmueble.Dormitorios</td>
+                <td>@inmueble.Precio.ToString("C")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@inmueble.Id" class="btn btn-info">Ver Detalles</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        <p>No se encontraron inmuebles.</p>
+        <p>La aplicación está funcionando correctamente.</p>
+    </div>
+}

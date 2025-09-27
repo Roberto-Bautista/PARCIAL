@@ -1,0 +1,12 @@
+# Ignorar archivos compilados
+*.exe
+*.dll
+*.obj
+
+# Ignorar carpetas de dependencias
+node_modules/
+vendor/
+
+# Ignorar archivos de configuración local
+.env
+*.log
