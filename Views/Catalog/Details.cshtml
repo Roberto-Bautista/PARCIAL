@@ -1,0 +1,169 @@
+@model PortalInmobiliario.Models.Inmueble
+@{
+    ViewData["Title"] = $"Detalle - {Model.Titulo}";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Index">Catálogo</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Codigo</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">@Model.Titulo</h3>
+                        <span class="badge bg-primary fs-6">@Model.Codigo</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Imagen))
+                    {
+                        <div class="mb-4 text-center">
+                            <img src="@Model.Imagen" alt="@Model.Titulo" class="img-fluid rounded" style="max-height: 400px;" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-4 text-center">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                                <div class="text-muted">
+                                    <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                    <p class="mt-2">Sin imagen disponible</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Información General</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Tipo:</strong></td>
+                                    <td><span class="badge bg-info">@Model.Tipo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ciudad:</strong></td>
+                                    <td>@Model.Ciudad</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Dirección:</strong></td>
+                                    <td>@Model.Direccion</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Características</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Dormitorios:</strong></td>
+                                    <td>
+                                        @if (Model.Dormitorios == 0)
+                                        {
+                                            <span class="text-muted">Sin dormitorios</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@Model.Dormitorios</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Baños:</strong></td>
+                                    <td>@Model.Banos</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Metros cuadrados:</strong></td>
+                                    <td>@Model.MetrosCuadrados m²</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h2 class="text-primary mb-3">@Model.Precio.ToString("C0")</h2>
+                    
+                    <!-- BOTÓN AGENDAR VISITA -->
+                    <a asp-controller="Visitas" asp-action="Create" asp-route-inmuebleId="@Model.Id" 
+                       class="btn btn-success btn-lg w-100 mb-3">
+                        <i class="bi bi-calendar-plus"></i> Agendar Visita
+                    </a>
+
+                    <a asp-controller="Reservas" asp-action="Create" asp-route-inmuebleId="@Model.Id" 
+                       class="btn btn-warning w-100 mb-3">
+                        <i class="bi bi-bookmark"></i> Reservar Inmueble
+                    </a>
+
+                    <div class="text-muted small">
+                        <p class="mb-1">Precio por metro cuadrado:</p>
+                        <strong>@((Model.Precio / Model.MetrosCuadrados).ToString("C0"))/m²</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">Información de Contacto</h6>
+                    <p class="card-text">
+                        Para más información sobre este inmueble, puedes agendar una visita 
+                        o contactarnos directamente.
+                    </p>
+                    <small class="text-muted">
+                        Código de referencia: <strong>@Model.Codigo</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver al Catálogo
+                </a>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="window.print()">
+                        <i class="bi bi-printer"></i> Imprimir
+                    </button>
+                    <button class="btn btn-outline-success" onclick="compartir()">
+                        <i class="bi bi-share"></i> Compartir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function compartir() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '@Model.Titulo',
+                    text: 'Mira este inmueble: @Model.Titulo en @Model.Ciudad',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores que no soportan Web Share API
+                navigator.clipboard.writeText(window.location.href).then(function() {
+                    alert('Enlace copiado al portapapeles');
+                });
+            }
+        }
+    </script>
+}
