@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PortalInmobiliario.Models;
-
+//primer commit
 namespace PortalInmobiliario.Controllers;
 
 public class HomeController : Controller
